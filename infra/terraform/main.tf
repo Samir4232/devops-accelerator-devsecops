@@ -2,7 +2,7 @@ terraform {
   required_version = ">= 1.5.0"
 
   backend "s3" {
-    bucket         = "devops-accelerator-platform-tf-state"
+    bucket         = "devops-accelerator-platform-tf-state-562590527524"
     key            = "global/devops-accelerator/terraform.tfstate"
     region         = "us-east-1"
     dynamodb_table = "devops-accelerator-tf-locker"
@@ -103,10 +103,10 @@ resource "aws_s3_bucket_cors_configuration" "frontend_cors" {
   bucket = aws_s3_bucket.frontend_bucket.id
 
   cors_rule {
+    allowed_methods = ["GET", "PUT", "POST"]
+    allowed_origins = ["*"]
     allowed_headers = ["*"]
-    allowed_methods = ["GET", "PUT", "HEAD"]
-    allowed_origins = ["https://${aws_cloudfront_distribution.frontend_distribution.domain_name}"]
-    expose_headers  = []
+    expose_headers  = ["ETag"]
     max_age_seconds = 3000
   }
 }
@@ -140,54 +140,54 @@ resource "aws_s3_bucket_policy" "frontend_bucket_policy" {
   })
 }
 
-resource "aws_cloudfront_distribution" "frontend_distribution" {
-  enabled             = true
-  default_root_object = "index.html"
-  price_class         = var.cloudfront_price_class
+#resource "aws_cloudfront_distribution" "frontend_distribution" {
+#  enabled             = true
+#  default_root_object = "index.html"
+#  price_class         = var.cloudfront_price_class
+#
+#  origin {
+#    domain_name = aws_s3_bucket_website_configuration.frontend_bucket_website.website_endpoint
+#    origin_id   = "S3-Frontend-Origin"
+#
+#    custom_origin_config {
+#      http_port              = 80
+#      https_port             = 443
+#      origin_protocol_policy = "http-only"
+#      origin_ssl_protocols   = ["TLSv1.2"]
+#    }
+#  }
+#
+#  default_cache_behavior {
+#    allowed_methods  = ["GET", "HEAD"]
+#    cached_methods   = ["GET", "HEAD"]
+#    target_origin_id = "S3-Frontend-Origin"
+#
+#    forwarded_values {
+#      query_string = false
+#      cookies {
+#        forward = "none"
+#      }
+#    }
+#
+#    viewer_protocol_policy = "redirect-to-https"
+#  }
+#
+#  viewer_certificate {
+#    cloudfront_default_certificate = true
+#  }
+#
+#  restrictions {
+#    geo_restriction {
+#      restriction_type = "none"
+#    }
+#  }
+#
+#  tags = {
+#    Name = "FrontendCDN"
+ # }
 
-  origin {
-    domain_name = aws_s3_bucket_website_configuration.frontend_bucket_website.website_endpoint
-    origin_id   = "S3-Frontend-Origin"
-
-    custom_origin_config {
-      http_port              = 80
-      https_port             = 443
-      origin_protocol_policy = "http-only"
-      origin_ssl_protocols   = ["TLSv1.2"]
-    }
-  }
-
-  default_cache_behavior {
-    allowed_methods  = ["GET", "HEAD"]
-    cached_methods   = ["GET", "HEAD"]
-    target_origin_id = "S3-Frontend-Origin"
-
-    forwarded_values {
-      query_string = false
-      cookies {
-        forward = "none"
-      }
-    }
-
-    viewer_protocol_policy = "redirect-to-https"
-  }
-
-  viewer_certificate {
-    cloudfront_default_certificate = true
-  }
-
-  restrictions {
-    geo_restriction {
-      restriction_type = "none"
-    }
-  }
-
-  tags = {
-    Name = "FrontendCDN"
-  }
-
-  depends_on = [aws_s3_bucket_policy.frontend_bucket_policy]
-}
+#  depends_on = [aws_s3_bucket_policy.frontend_bucket_policy]
+#}
 
 resource "aws_iam_role" "presign_lambda_role" {
   name = "DevOps-Accelerator-Presign-Lambda-Role"
@@ -285,7 +285,9 @@ resource "aws_apigatewayv2_stage" "presign_stage" {
   auto_deploy = true
 
   default_route_settings {
-    data_trace_enabled = true
+    data_trace_enabled     = true
+  throttling_burst_limit = 100
+  throttling_rate_limit  = 100
   }
 
   access_log_settings {
@@ -336,4 +338,24 @@ resource "aws_iam_policy" "devops_accelerator_lambda_sns_policy" {
 resource "aws_iam_role_policy_attachment" "lambda_sns_policy_attachment" {
   role       = aws_iam_role.lambda_exec_role.name
   policy_arn = aws_iam_policy.devops_accelerator_lambda_sns_policy.arn
+}
+resource "aws_s3_bucket_cors_configuration" "upload_bucket_cors" {
+  bucket = aws_s3_bucket.upload_bucket.id
+
+  cors_rule {
+    allowed_headers = ["*"]
+
+    allowed_methods = [
+      "PUT",
+      "POST",
+      "GET",
+      "HEAD"
+    ]
+
+    allowed_origins = ["*"]
+
+    expose_headers = ["ETag"]
+
+    max_age_seconds = 3000
+  }
 }

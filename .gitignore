@@ -5,7 +5,10 @@
 *.tfstate                        # Local state files
 *.tfstate.backup                 # State backup files
 *.tfstate.*                      # State lock or variations
-
+*.tfvars
+infra/terraform/aws/
+infra/terraform/.terraform/
+infra/terraform/awscliv2.zip
 # Lock file: keep this unless you're managing multiple provider versions manually
 # If working in teams or CI/CD, commit it for consistency
 # Uncomment below only if you know what you're doing

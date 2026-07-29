@@ -463,9 +463,7 @@
       if (!uploadedFile) {
         alert('Please upload a payment screenshot before submitting.');
         return;
-      }
-
-      // Show progress bar
+      }      // Show progress bar
       uploadSuccess.classList.add('hidden');
       uploadError.classList.add('hidden');
       uploadProgress.classList.remove('hidden');
@@ -474,7 +472,7 @@
 
       try {
         // Step 1: Get presigned URL
-        const apiUrl = "https://0jwmlx4c0a.execute-api.us-east-1.amazonaws.com/generate-presigned-url";
+        const apiUrl =  "https://kn5c2cscn3.execute-api.us-east-1.amazonaws.com/generate-presigned-url";
         const presignRes = await fetch(apiUrl, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
