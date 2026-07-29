@@ -9,6 +9,12 @@ pipeline {
             }
         }
 
+        stage('Gitleaks Secret Scan') {
+            steps {
+                sh 'gitleaks detect --source . --redact --exit-code 1'
+            }
+        }
+
         stage('Terraform Validate') {
             steps {
                 dir('infra/terraform') {
@@ -20,7 +26,7 @@ pipeline {
 
         stage('Build Complete') {
             steps {
-                echo 'DevOps Accelerator pipeline completed successfully!'
+                echo 'DevSecOps pipeline completed successfully!'
             }
         }
     }
