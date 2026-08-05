@@ -49,6 +49,7 @@ $RECYCLE.BIN/
 # ----------------------------------------
 __pycache__/
 *.pyc
+file-management-api/venv/
 
 # ----------------------------------------
 # VSCode config

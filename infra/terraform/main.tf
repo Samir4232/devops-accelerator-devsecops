@@ -285,7 +285,7 @@ resource "aws_apigatewayv2_stage" "presign_stage" {
   auto_deploy = true
 
   default_route_settings {
-    data_trace_enabled     = true
+    data_trace_enabled     = false
   throttling_burst_limit = 100
   throttling_rate_limit  = 100
   }
