@@ -150,6 +150,19 @@ stage('OWASP Dependency Check') {
     }
 }
 
+stage('SonarQube Analysis') {
+    steps {
+        withSonarQubeEnv('SonarQube') {
+            sh '''
+            sonar-scanner \
+            -Dsonar.projectKey=devops-accelerator \
+            -Dsonar.projectName=devops-accelerator \
+            -Dsonar.sources=.
+            '''
+        }
+    }
+}
+
 stage('Checkov IaC Scan') {
     steps {
         sh '''
