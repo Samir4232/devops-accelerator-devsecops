@@ -180,7 +180,7 @@ stage('OWASP ZAP DAST Scan') {
         rm -f zap-report.html
 
         docker run --rm \
-        -u $(id -u):$(id -g) \
+        --user root \
         -v $(pwd):/zap/wrk/:rw \
         zaproxy/zap-stable \
         zap-baseline.py \
@@ -189,6 +189,7 @@ stage('OWASP ZAP DAST Scan') {
         '''
     }
 }
+
         stage('Build Complete') {
 
             steps {
