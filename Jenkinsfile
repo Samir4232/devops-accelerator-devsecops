@@ -173,7 +173,18 @@ stage('Checkov IaC Scan') {
     }
 }
 
-
+stage('OWASP ZAP DAST Scan') {
+    steps {
+        sh '''
+        docker run --rm \
+        -v $(pwd):/zap/wrk/:rw \
+        zaproxy/zap-stable \
+        zap-baseline.py \
+        -t http://10.0.0.148:8000 \
+        -r zap-report.html
+        '''
+    }
+}
 
         stage('Build Complete') {
 
