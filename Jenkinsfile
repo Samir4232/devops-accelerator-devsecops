@@ -186,6 +186,7 @@ stage('OWASP ZAP DAST Scan') {
         zap-baseline.py \
         -t http://10.0.0.148:8000 \
         -r zap-report.html
+	-I
         '''
     }
 }
