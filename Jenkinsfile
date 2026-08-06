@@ -160,7 +160,7 @@ stage('Checkov IaC Scan') {
     }
 }
 
-}
+
 
         stage('Build Complete') {
 
