@@ -185,7 +185,7 @@ stage('OWASP ZAP DAST Scan') {
         zaproxy/zap-stable \
         zap-baseline.py \
         -t http://10.0.0.148:8000 \
-        -r zap-report.html
+        -r zap-report.html \
 	-I
         '''
     }
