@@ -85,3 +85,4 @@ file-management-api/venv/
 # ----------------------------------------
 node_modules/
 dist/
+dependency-check-report/

@@ -150,6 +150,14 @@ stage('OWASP Dependency Check') {
     }
 }
 
+stage('Checkov IaC Scan') {
+    steps {
+        sh '''
+        checkov -d infra/terraform
+        '''
+    }
+}
+
         stage('Build Complete') {
 
             steps {
