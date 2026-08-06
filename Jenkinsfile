@@ -133,7 +133,22 @@ stage('Deploy to Kubernetes') {
 }
 
 
+stage('OWASP Dependency Check') {
 
+    steps {
+
+        sh '''
+
+        dependency-check \
+        --project DevOps-Accelerator \
+        --scan file-management-api \
+        --format HTML \
+        --out dependency-check-report
+
+        '''
+
+    }
+}
 
         stage('Build Complete') {
 
