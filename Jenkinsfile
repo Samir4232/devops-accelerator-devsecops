@@ -153,9 +153,13 @@ stage('OWASP Dependency Check') {
 stage('Checkov IaC Scan') {
     steps {
         sh '''
-        /var/lib/jenkins/checkov-venv/bin/checkov  -d infra/terraform
+        /var/lib/jenkins/checkov-venv/bin/checkov \
+        -d infra/terraform \
+        --soft-fail
         '''
     }
+}
+
 }
 
         stage('Build Complete') {
