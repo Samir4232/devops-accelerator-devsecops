@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Service
+
+metadata:
+  name: file-management-api-service
+
+spec:
+
+  type: LoadBalancer
+
+  selector:
+    app: file-management-api
+
+  ports:
+
+  - protocol: TCP
+
+    port: 80
+
+    targetPort: 8000

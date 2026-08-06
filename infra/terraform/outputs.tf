@@ -13,7 +13,7 @@ output "frontend_bucket_name" {
 
 #output "cloudfront_url" {
 #  description = "CloudFront distribution domain name"
- # value       = aws_cloudfront_distribution.frontend_distribution.domain_name
+# value       = aws_cloudfront_distribution.frontend_distribution.domain_name
 #}
 
 output "presigned_url_api_endpoint" {

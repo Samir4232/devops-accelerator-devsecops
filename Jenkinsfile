@@ -111,6 +111,27 @@ pipeline {
             }
         }
 
+stage('Deploy to Kubernetes') {
+
+    steps {
+
+        sh '''
+
+        aws eks update-kubeconfig \
+        --region ${AWS_REGION} \
+        --name devops-accelerator-cluster
+
+
+        kubectl apply -f k8s/
+
+
+        kubectl rollout status deployment/file-management-api
+
+        '''
+
+    }
+}
+
 
 
 

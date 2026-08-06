@@ -1,5 +1,12 @@
+
 terraform {
   required_version = ">= 1.5.0"
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.0"
+    }
+  }
 
   backend "s3" {
     bucket         = "devops-accelerator-platform-tf-state-562590527524"
@@ -47,12 +54,12 @@ resource "aws_s3_bucket" "upload_bucket" {
 }
 
 resource "aws_lambda_function" "process_uploaded_file" {
-  function_name = "process-uploaded-file"
-  runtime       = "python3.11"
-  handler       = "main.lambda_handler"
-  filename      = "${path.module}/../../backend/lambda/process-uploaded-file/lambda.zip"
+  function_name    = "process-uploaded-file"
+  runtime          = "python3.11"
+  handler          = "main.lambda_handler"
+  filename         = "${path.module}/../../backend/lambda/process-uploaded-file/lambda.zip"
   source_code_hash = filebase64sha256("${path.module}/../../backend/lambda/process-uploaded-file/lambda.zip")
-  role = aws_iam_role.lambda_exec_role.arn
+  role             = aws_iam_role.lambda_exec_role.arn
 
   environment {
     variables = {
@@ -125,6 +132,9 @@ resource "aws_s3_bucket_website_configuration" "frontend_bucket_website" {
 
 resource "aws_s3_bucket_policy" "frontend_bucket_policy" {
   bucket = aws_s3_bucket.frontend_bucket.id
+  depends_on = [
+    aws_s3_bucket_public_access_block.frontend_bucket_public_access
+  ]
 
   policy = jsonencode({
     Version = "2012-10-17",
@@ -184,7 +194,7 @@ resource "aws_s3_bucket_policy" "frontend_bucket_policy" {
 #
 #  tags = {
 #    Name = "FrontendCDN"
- # }
+# }
 
 #  depends_on = [aws_s3_bucket_policy.frontend_bucket_policy]
 #}
@@ -235,11 +245,11 @@ resource "aws_iam_role_policy_attachment" "presign_lambda_attach" {
 }
 
 resource "aws_lambda_function" "presign_lambda" {
-  function_name = "DevOps-Accelerator-Presign-Handler"
-  role          = aws_iam_role.presign_lambda_role.arn
-  handler       = "main.lambda_handler"
-  runtime       = "python3.12"
-  filename      = "${path.module}/../../backend/lambda/generate-presigned-url/lambda.zip"
+  function_name    = "DevOps-Accelerator-Presign-Handler"
+  role             = aws_iam_role.presign_lambda_role.arn
+  handler          = "main.lambda_handler"
+  runtime          = "python3.12"
+  filename         = "${path.module}/../../backend/lambda/generate-presigned-url/lambda.zip"
   source_code_hash = filebase64sha256("${path.module}/../../backend/lambda/generate-presigned-url/lambda.zip")
 
   environment {
@@ -261,10 +271,10 @@ resource "aws_apigatewayv2_api" "presign_api" {
 }
 
 resource "aws_apigatewayv2_integration" "presign_api_integration" {
-  api_id             = aws_apigatewayv2_api.presign_api.id
-  integration_type   = "AWS_PROXY"
-  integration_uri    = aws_lambda_function.presign_lambda.invoke_arn
-  integration_method = "POST"
+  api_id                 = aws_apigatewayv2_api.presign_api.id
+  integration_type       = "AWS_PROXY"
+  integration_uri        = aws_lambda_function.presign_lambda.invoke_arn
+  integration_method     = "POST"
   payload_format_version = "2.0"
 }
 
@@ -286,18 +296,18 @@ resource "aws_apigatewayv2_stage" "presign_stage" {
 
   default_route_settings {
     data_trace_enabled     = false
-  throttling_burst_limit = 100
-  throttling_rate_limit  = 100
+    throttling_burst_limit = 100
+    throttling_rate_limit  = 100
   }
 
   access_log_settings {
     destination_arn = aws_cloudwatch_log_group.apigw_logs.arn
     format = jsonencode({
-      requestId      = "$context.requestId",
-      requestTime    = "$context.requestTime",
-      httpMethod     = "$context.httpMethod",
-      path           = "$context.path",
-      status         = "$context.status"
+      requestId   = "$context.requestId",
+      requestTime = "$context.requestTime",
+      httpMethod  = "$context.httpMethod",
+      path        = "$context.path",
+      status      = "$context.status"
     })
   }
 }
@@ -358,4 +368,13 @@ resource "aws_s3_bucket_cors_configuration" "upload_bucket_cors" {
 
     max_age_seconds = 3000
   }
+}
+resource "aws_ecr_repository" "file_management_api" {
+  name = "devops-accelerator-file-management-api"
+
+  image_scanning_configuration {
+    scan_on_push = true
+  }
+
+  image_tag_mutability = "MUTABLE"
 }
