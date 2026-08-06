@@ -167,6 +167,7 @@ stage('Checkov IaC Scan') {
     steps {
         sh '''
         /var/lib/jenkins/checkov-venv/bin/checkov \
+
         -d infra/terraform \
         --soft-fail
         '''
@@ -176,12 +177,14 @@ stage('Checkov IaC Scan') {
 stage('OWASP ZAP DAST Scan') {
     steps {
         sh '''
+        rm -f zap-report.html
+
         docker run --rm \
         -v $(pwd):/zap/wrk/:rw \
         zaproxy/zap-stable \
         zap-baseline.py \
         -t http://10.0.0.148:8000 \
-        -r zap-report.html
+        -r /zap/wrk/zap-report.html
         '''
     }
 }
