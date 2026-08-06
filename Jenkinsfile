@@ -167,7 +167,6 @@ stage('Checkov IaC Scan') {
     steps {
         sh '''
         /var/lib/jenkins/checkov-venv/bin/checkov \
-
         -d infra/terraform \
         --soft-fail
         '''
