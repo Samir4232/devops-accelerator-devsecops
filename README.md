@@ -264,37 +264,6 @@ devops-accelerator-devsecops/
 └── README.md
 ---
 
-
-
-```
-DevOps-Accelerator-Project
-├── .github
-│   └── workflows
-│       ├── backend-deploy.yml
-│       ├── frontend.yml
-│       └── terraform.yml
-├── backend
-│   └── lambda
-│       ├── generate-presigned-url
-│       │   ├── lambda.zip
-│       │   └── main.py
-│       └── process-uploaded-file
-│           ├── lambda.zip
-│           └── main.py
-├── frontend
-│   └── index.html
-├── gigs
-│   ├── project-generator
-│   └── qa-bot
-├── infra
-│   └── terraform
-│       ├── main.tf
-│       ├── outputs.tf
-│       ├── terraform.tfvars
-│       └── variables.tf
-└── README.md
-└── .gitignore
-
 ```
 ## 📸 Project Screenshots
 
@@ -313,6 +282,18 @@ DevOps-Accelerator-Project
 ![Screenshot 7](screenshots/image7.png)
 
 ![Screenshot 8](screenshots/image8.png)
+
+![Screenshot 9](screenshots/image9.png)
+
+![Screenshot 10](screenshots/image10.png)
+
+![Screenshot 11](screenshots/image11.png)
+
+![Screenshot 12](screenshots/image12.png)
+
+![Screenshot 13](screenshots/image13.png)
+
+![Screenshot 14](screenshots/image14.png)
 
 ![Screenshot 15](screenshots/image15.png)
 
