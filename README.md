@@ -472,3 +472,7 @@ You’ve successfully deployed a **production-grade DevOps Accelerator**, with:
 *  Monitoring + Email notifications via CloudWatch + SNS
 
 *Happy DevOps-ing!*
+## 📸 Project Screenshots
+
+![Project Screenshot](screenshots/image1.png)
+
