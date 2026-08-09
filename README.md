@@ -296,10 +296,6 @@ DevOps-Accelerator-Project
 └── .gitignore
 
 ```
-
-## 📸 Project Screenshots
-
-![Project Screenshot](screenshots/image1.png)
 ## 📸 Project Screenshots
 
 ![Screenshot 1](screenshots/image1.png)
@@ -317,17 +313,6 @@ DevOps-Accelerator-Project
 ![Screenshot 7](screenshots/image7.png)
 
 ![Screenshot 8](screenshots/image8.png)
-![Screenshot 9](screenshots/image9.png)
-
-![Screenshot 10](screenshots/image10.png)
-
-![Screenshot 11](screenshots/image11.png)
-
-![Screenshot 12](screenshots/image12.png)
-
-![Screenshot 13](screenshots/image13.png)
-
-![Screenshot 14](screenshots/image14.png)
 
 ![Screenshot 15](screenshots/image15.png)
 
