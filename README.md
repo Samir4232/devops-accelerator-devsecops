@@ -18,7 +18,7 @@ The DevOps Accelerator Platform enables users to:
 •	Provision AWS infrastructure using Terraform Infrastructure as Code.
 •	Automate CI/CD workflows using Jenkins.
 •	Perform continuous security validation using multiple DevSecOps tools.
-•	Monitor application and infrastructure health using Prometheus, Grafana, and CloudWatch.
+•	Monitor application and infrastructure health using Prometheus, Grafana.
 
 
 ---
@@ -264,34 +264,55 @@ devops-accelerator-devsecops/
 └── README.md
 ---
 
-```
 ## 📸 Project Screenshots
 
-![Screenshot 1](screenshots/image1.png)
+### Screenshot 1
+<img src="./screenshots/image1.png" width="800">
 
-![Screenshot 2](screenshots/image2.png)
+### Screenshot 2
+<img src="./screenshots/image2.png" width="800">
 
-![Screenshot 3](screenshots/image3.png)
+### Screenshot 3
+<img src="./screenshots/image3.png" width="800">
 
-![Screenshot 4](screenshots/image4.png)
+### Screenshot 4
+<img src="./screenshots/image4.png" width="800">
 
-![Screenshot 5](screenshots/image5.png)
+### Screenshot 5
+<img src="./screenshots/image5.png" width="800">
 
-![Screenshot 6](screenshots/image6.png)
+### Screenshot 6
+<img src="./screenshots/image6.png" width="800">
 
-![Screenshot 7](screenshots/image7.png)
+### Screenshot 7
+<img src="./screenshots/image7.png" width="800">
 
-![Screenshot 8](screenshots/image8.png)
+### Screenshot 8
+<img src="./screenshots/image8.png" width="800">
 
-![Screenshot 9](screenshots/image9.png)
+### Screenshot 9
+<img src="./screenshots/image9.png" width="800">
 
-![Screenshot 10](screenshots/image10.png)
+### Screenshot 10
+<img src="./screenshots/image10.png" width="800">
 
-![Screenshot 11](screenshots/image11.png)
+### Screenshot 11
+<img src="./screenshots/image11.png" width="800">
 
-![Screenshot 12](screenshots/image12.png)
+### Screenshot 12
+<img src="./screenshots/image12.png" width="800">
 
-![Screenshot 13](screenshots/image13.png)
+### Screenshot 13
+<img src="./screenshots/image13.png" width="800">
+
+### Screenshot 14
+<img src="./screenshots/image14.png" width="800">
+
+### Screenshot 15
+<img src="./screenshots/image15.png" width="800">
+
+### Screenshot 16
+<img src="./screenshots/image16.png" width="800">
 
 ![Screenshot 14](screenshots/image14.png)
 
