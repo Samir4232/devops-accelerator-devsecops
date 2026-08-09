@@ -475,4 +475,20 @@ You’ve successfully deployed a **production-grade DevOps Accelerator**, with:
 ## 📸 Project Screenshots
 
 ![Project Screenshot](screenshots/image1.png)
+## 📸 Project Screenshots
 
+![Screenshot 1](screenshots/image1.png)
+
+![Screenshot 2](screenshots/image2.png)
+
+![Screenshot 3](screenshots/image3.png)
+
+![Screenshot 4](screenshots/image4.png)
+
+![Screenshot 5](screenshots/image5.png)
+
+![Screenshot 6](screenshots/image6.png)
+
+![Screenshot 7](screenshots/image7.png)
+
+![Screenshot 8](screenshots/image8.png)
