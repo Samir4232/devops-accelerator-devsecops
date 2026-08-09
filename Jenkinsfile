@@ -40,6 +40,7 @@ pipeline {
 
         stage('Terraform Validate') {
             steps {
+
                 dir('infra/terraform') {
 
                     sh 'terraform init -backend=false'
@@ -52,6 +53,7 @@ pipeline {
 
         stage('Docker Build') {
             steps {
+
                 sh '''
                     docker build \
                     -t file-management-api:${IMAGE_TAG} \
@@ -63,6 +65,7 @@ pipeline {
 
         stage('Trivy Image Scan') {
             steps {
+
                 sh '''
                     trivy image \
                     --severity HIGH,CRITICAL \
@@ -77,6 +80,7 @@ pipeline {
 
         stage('Push Image To ECR') {
             steps {
+
                 sh '''
 
                     aws ecr get-login-password \
@@ -101,6 +105,7 @@ pipeline {
 
         stage('Deploy to Kubernetes') {
             steps {
+
                 sh '''
 
                     aws eks update-kubeconfig \
@@ -121,6 +126,7 @@ pipeline {
 
         stage('OWASP Dependency Check') {
             steps {
+
                 sh '''
 
                     rm -rf dependency-check-report
@@ -154,6 +160,7 @@ pipeline {
 
         stage('Checkov IaC Scan') {
             steps {
+
                 sh '''
 
                     /var/lib/jenkins/checkov-venv/bin/checkov \
@@ -168,6 +175,7 @@ pipeline {
 
         stage('OWASP ZAP DAST Scan') {
             steps {
+
                 sh '''
 
                     rm -f zap-report.html
@@ -190,109 +198,239 @@ pipeline {
             steps {
 
                 sh '''
-                    cat > security-summary.html <<EOF
+cat > security-summary.html <<HTMLREPORT
 
-                    <html>
+<!DOCTYPE html>
 
-                    <head>
+<html>
 
-                    <title>DevSecOps Security Report</title>
+<head>
 
-                    <style>
+<meta charset="UTF-8">
 
-                    body {
-                        font-family: Arial, sans-serif;
-                        margin: 40px;
-                    }
+<title>DevSecOps Security Report</title>
 
-                    h1 {
-                        color: #333;
-                    }
+<style>
 
-                    table {
-                        border-collapse: collapse;
-                        width: 100%;
-                    }
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f4f6f8;
+    margin: 0;
+    padding: 40px;
+}
 
-                    th, td {
-                        border: 1px solid #ccc;
-                        padding: 12px;
-                        text-align: left;
-                    }
+.container {
+    max-width: 1000px;
+    margin: auto;
+    background: white;
+    padding: 35px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
 
-                    th {
-                        background-color: #eee;
-                    }
+h1 {
+    color: #1f2937;
+    margin-bottom: 5px;
+}
 
-                    </style>
+.subtitle {
+    color: #6b7280;
+    margin-bottom: 30px;
+}
 
-                    </head>
+.info {
+    background: #f8fafc;
+    padding: 15px;
+    border-radius: 6px;
+    margin-bottom: 25px;
+}
 
-                    <body>
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
 
-                    <h1>DevSecOps Security Report</h1>
+th {
+    background: #1f2937;
+    color: white;
+    padding: 14px;
+    text-align: left;
+}
 
-                    <p>
-                    Jenkins Build: ${BUILD_NUMBER}
-                    </p>
+td {
+    padding: 14px;
+    border-bottom: 1px solid #ddd;
+}
 
-                    <p>
-                    Build Date: $(date)
-                    </p>
+tr:hover {
+    background: #f9fafb;
+}
 
-                    <table>
+.status {
+    color: #15803d;
+    font-weight: bold;
+}
 
-                    <tr>
-                        <th>Security Tool</th>
-                        <th>Report</th>
-                    </tr>
+a {
+    color: #2563eb;
+    text-decoration: none;
+    font-weight: bold;
+}
 
-                    <tr>
-                        <td>Trivy Container Scan</td>
-                        <td>
-                            trivy-report.json
-                        </td>
-                    </tr>
+a:hover {
+    text-decoration: underline;
+}
 
-                    <tr>
-                        <td>OWASP Dependency Check</td>
-                        <td>
-                            dependency-check-report
-                        </td>
-                    </tr>
+.footer {
+    margin-top: 30px;
+    color: #6b7280;
+    font-size: 13px;
+}
 
-                    <tr>
-                        <td>Checkov IaC Scan</td>
-                        <td>
-                            checkov-report.json
-                        </td>
-                    </tr>
+</style>
 
-                    <tr>
-                        <td>OWASP ZAP DAST</td>
-                        <td>
-                            zap-report.html
-                        </td>
-                    </tr>
+</head>
 
-                    <tr>
-                        <td>SonarQube</td>
-                        <td>
-                            <a href="${SONARQUBE_URL}">
-                            Open SonarQube
-                            </a>
-                        </td>
-                    </tr>
 
-                    </table>
+<body>
 
-                    </body>
+<div class="container">
 
-                    </html>
+<h1>DevSecOps Security Report</h1>
 
-                    EOF
+<div class="subtitle">
+Daily Security Monitoring Report
+</div>
+
+
+<div class="info">
+
+<strong>Jenkins Build:</strong> #${BUILD_NUMBER}<br>
+
+<strong>Build Date:</strong> $(date -u)<br>
+
+<strong>Project:</strong> DevOps Accelerator
+
+</div>
+
+
+<table>
+
+<tr>
+
+<th>Security Tool</th>
+
+<th>Status</th>
+
+<th>Report</th>
+
+</tr>
+
+
+<tr>
+
+<td>Gitleaks Secret Scan</td>
+
+<td class="status">Completed</td>
+
+<td>Secrets scan executed during pipeline</td>
+
+</tr>
+
+
+<tr>
+
+<td>Trivy Container Scan</td>
+
+<td class="status">Completed</td>
+
+<td>
+<a href="trivy-report.json">
+View Trivy Report
+</a>
+</td>
+
+</tr>
+
+
+<tr>
+
+<td>OWASP Dependency Check</td>
+
+<td class="status">Completed</td>
+
+<td>
+<a href="dependency-check-report/dependency-check-report.html">
+View Dependency Report
+</a>
+</td>
+
+</tr>
+
+
+<tr>
+
+<td>SonarQube</td>
+
+<td class="status">Analysis Completed</td>
+
+<td>
+<a href="${SONARQUBE_URL}">
+Open SonarQube
+</a>
+</td>
+
+</tr>
+
+
+<tr>
+
+<td>Checkov IaC Scan</td>
+
+<td class="status">Completed</td>
+
+<td>
+<a href="checkov-report.json">
+View Checkov Report
+</a>
+</td>
+
+</tr>
+
+
+<tr>
+
+<td>OWASP ZAP DAST</td>
+
+<td class="status">Completed</td>
+
+<td>
+<a href="zap-report.html">
+View ZAP Report
+</a>
+</td>
+
+</tr>
+
+
+</table>
+
+
+<div class="footer">
+
+Generated automatically by Jenkins DevSecOps Security Pipeline.
+
+</div>
+
+
+</div>
+
+</body>
+
+</html>
+
+HTMLREPORT
                 '''
-
             }
         }
 
@@ -309,6 +447,7 @@ pipeline {
                 ''',
                 allowEmptyArchive: true,
                 fingerprint: true
+
             }
         }
 
@@ -322,4 +461,5 @@ pipeline {
         }
 
     }
+
 }
