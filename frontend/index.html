@@ -70,7 +70,7 @@
           - Built for DevOps community with passion!
         </div>
         <p class="text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
-          Master DevOps with personalized mentorship from Mohammad Anees Alam.<br>
+          Master DevOps with personalized mentorship from Samir Shukla.<br>
           Learn industry best practices through hands-on projects, real-world scenarios, and expert guidance throughout your journey.<br>
           Transform your career with practical DevOps skills.
         </p>
@@ -150,7 +150,7 @@
               <p class="text-gray-600 text-sm">DevOps Engineer at TechCorp</p>
             </div>
           </div>
-          <p class="text-gray-700">"Mohammad's mentorship transformed my career. The hands-on approach and real-world projects gave me the confidence to land my dream DevOps role."</p>
+          <p class="text-gray-700">"Samir's mentorship transformed my career. The hands-on approach and real-world projects gave me the confidence to land my dream DevOps role."</p>
           <div class="flex text-yellow-400 mt-4">
             <i class="fas fa-star"></i>
             <i class="fas fa-star"></i>
@@ -350,7 +350,7 @@
         <div>
           <h4 class="text-lg font-semibold mb-4">Contact</h4>
           <div class="space-y-2">
-            <p class="text-gray-400"><i class="fas fa-envelope mr-2"></i>mohammad@devopsmentorship.com</p>
+            <p class="text-gray-400"><i class="fas fa-envelope mr-2"></i>samir@devopsmentorship.com</p>
             <p class="text-gray-400"><i class="fas fa-phone mr-2"></i>+1 (555) 123-4567</p>
             <div class="flex space-x-4 mt-4">
               <a href="#" class="text-gray-400 hover:text-devops-green transition-colors"><i class="fab fa-linkedin text-xl"></i></a>
@@ -382,6 +382,7 @@
     const uploadProgress = document.getElementById('upload-progress');
     const uploadSuccess = document.getElementById('upload-success');
     const uploadError = document.getElementById('upload-error');
+const submitButton = document.querySelector('#upload-form button[type="submit"]');
     const progressBar = document.getElementById('progress-bar');
     const progressText = document.getElementById('progress-text');
     const fileName = document.getElementById('file-name');
@@ -441,6 +442,9 @@
         return;
       }
       uploadedFile = file;
+
+submitButton.disabled = false;
+submitButton.innerHTML = '<i class="fas fa-paper-plane mr-2"></i>Submit Payment Confirmation';
       // Show file name immediately
       selectedFileName.textContent = `File selected to upload is: ${file.name}`;
       selectedFileName.style.display = 'block';
@@ -451,62 +455,91 @@
 
     // Form submission logic
     document.getElementById('upload-form').addEventListener('submit', async function (e) {
-      e.preventDefault();
-      const fullName = document.getElementById('fullName').value.trim();
-      const email = document.getElementById('email').value.trim();
-      const notes = document.getElementById('notes').value.trim();
+  e.preventDefault();
 
-      if (!fullName || !email) {
-        alert('Please fill in all required fields.');
-        return;
-      }
-      if (!uploadedFile) {
-        alert('Please upload a payment screenshot before submitting.');
-        return;
-      }      // Show progress bar
-      uploadSuccess.classList.add('hidden');
-      uploadError.classList.add('hidden');
-      uploadProgress.classList.remove('hidden');
-      progressBar.style.width = '0%';
-      progressText.textContent = '0%';
+  const fullName = document.getElementById('fullName').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const notes = document.getElementById('notes').value.trim();
 
-      try {
-        // Step 1: Get presigned URL
-        const apiUrl =  "https://kn5c2cscn3.execute-api.us-east-1.amazonaws.com/generate-presigned-url";
-        const presignRes = await fetch(apiUrl, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            filename: uploadedFile.name,
-            contentType: uploadedFile.type,
-            fullName,
-            email,
-            notes
-          })
-        });
-        const presignData = await presignRes.json();
-        if (!presignRes.ok) throw new Error(presignData.message || "Failed to get presigned URL");
-        const uploadUrl = presignData.uploadUrl;
+  if (!fullName || !email) {
+    alert('Please fill in all required fields.');
+    return;
+  }
 
-        // Step 2: Upload to S3 using presigned URL with progress
-        await uploadFileWithProgress(uploadUrl, uploadedFile, uploadedFile.type);
+  if (!uploadedFile) {
+    alert('Please upload a payment screenshot before submitting.');
+    return;
+  }
 
-        // Show success
-        uploadProgress.classList.add('hidden');
-        uploadSuccess.classList.remove('hidden'); // Show success after upload
-        fileName.textContent = uploadedFile.name;
-        selectedFileName.style.display = 'none';
-        uploadedFile = null;
-        // Optionally, reset form fields
-        // document.getElementById('upload-form').reset();
-      } catch (err) {
-        uploadProgress.classList.add('hidden');
-        uploadError.classList.remove('hidden');
-        errorMessage.textContent = "Upload failed: " + err.message;
-      }
+  submitButton.disabled = true;
+  submitButton.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Processing...';
+
+  uploadSuccess.classList.add('hidden');
+  uploadError.classList.add('hidden');
+  uploadProgress.classList.remove('hidden');
+
+  progressBar.style.width = '0%';
+  progressText.textContent = '0%';
+
+  try {
+const apiUrl = "https://9htsza5ts2.execute-api.us-east-1.amazonaws.com/generate-presigned-url";
+
+    const presignRes = await fetch(apiUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        filename: uploadedFile.name,
+        contentType: uploadedFile.type,
+        fullName,
+        email,
+        notes
+      })
     });
 
-    // Helper to upload file with progress
+    const presignData = await presignRes.json();
+
+    if (!presignRes.ok) {
+      throw new Error(presignData.message || "Failed to get presigned URL");
+    }
+
+    const uploadUrl = presignData.uploadUrl;
+    const fileNameUploaded = uploadedFile.name;
+    const fileToUpload = uploadedFile;
+
+    await uploadFileWithProgress(
+      uploadUrl,
+      fileToUpload,
+      fileToUpload.type
+    );
+
+    uploadProgress.classList.add('hidden');
+    uploadSuccess.classList.remove('hidden');
+
+    fileName.textContent = fileNameUploaded;
+    selectedFileName.style.display = 'none';
+
+    uploadedFile = null;
+
+    submitButton.disabled = true;
+    submitButton.innerHTML =
+      '<i class="fas fa-check mr-2"></i>Payment Confirmation Submitted';
+
+  } catch (err) {
+    uploadProgress.classList.add('hidden');
+    uploadError.classList.remove('hidden');
+
+    errorMessage.textContent = "Upload failed: " + err.message;
+
+    submitButton.disabled = false;
+    submitButton.innerHTML =
+      '<i class="fas fa-paper-plane mr-2"></i>Submit Payment Confirmation';
+  }
+});
+
+
+// Helper to upload file with progress
     function uploadFileWithProgress(url, file, contentType) {
       return new Promise((resolve, reject) => {
         const xhr = new XMLHttpRequest();
